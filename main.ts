@@ -6,18 +6,9 @@ const TARGET_KEY = ["targetUrl"];
 
 Deno.serve(async (req) => {
   const url = new URL(req.url);
-
- 
-    const newTargetUrl = url.searchParams.get("setUrl")!;
-    // 基本校验一下 URL 格式
-    try {
-      new URL(newTargetUrl);
-    } catch {
-      return new Response("无效的 URL，请检查格式。", { status: 400 });
-    }
- 
-  
-    const baseUrl ="";
+    const proxyUrl ="https://denoproxy-translate.deno.dev";
+      
+    const baseUrl ="https://translate.googleapis.com";
 
     // 去掉 /proxy 前缀，剩余部分作为相对路径
     const proxyPath = url.pathname.slice(baseUrl.length);
