@@ -77,10 +77,24 @@ async function handleHttpRequest(req: Request): Promise<Response> {
 
     console.log(`[HTTP] Rewritten target: ${url.toString()}`);
 
+
+     // 构建新的 Headers 对象，复制原始请求的一部分，并添加/修改一些关键头部
+      const headers = new Headers(req.headers);
+      
+      // 移除可能导致问题的头部
+      headers.delete('Proxy-Connection'); // 代理连接头部
+      headers.delete('Connection'); // Connection头部通常由fetch自动处理
+ 
+      // 覆盖或添加关键的浏览器模拟头部以减少被识别为机器人的风险
+      headers.set('Host', url.hostname); // 确保Host头是目标服务器的
+      headers.set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'); // 模拟Chrome浏览器
+      headers.set('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7');
+      headers.set('Accept-Language', 'zh-CN,zh;q=0.9,en;q=0.8');
+    
     // 构建转发请求
     const proxyReq = new Request(url.toString(), {
       method: req.method,
-      headers: req.headers,
+      headers: headers,
       body: req.body,
       // duplex: "half" 是 Deno fetch 处理 Request body 的必要参数
       duplex: 'half' as RequestDuplex, // 类型断言来解决 TypeScript 报错
