@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.211.0/http/server.ts";
-import * as net from "https://deno.land/std@0.211.0/node/net.ts"; // Deno 的 net 模块用于 TCP 连接
+// import * as net from "https://deno.land/std@0.211.0/node/net.ts"; // Deno 的 net 模块用于 TCP 连接
 
 async function handleConnect(req: Request, conn: Deno.Conn) {
     const url = new URL(req.url); // CONNECT 请求的 URL 通常是 http://hostname:port
